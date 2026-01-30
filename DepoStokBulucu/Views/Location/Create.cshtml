@@ -1,0 +1,22 @@
+﻿@model DepoStokBulucu.Models.Location
+
+<div class="container mt-4">
+    <h2>Yeni Depo Bölgesi Ekle</h2>
+    <hr />
+
+    <form asp-action="Create" enctype="multipart/form-data" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Bölge Adı (Örn: Giriş Sağ Raf)</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fotoğraf Seç</label>
+            <input type="file" name="file" class="form-control" accept="image/*" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Kaydet</button>
+        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+    </form>
+</div>

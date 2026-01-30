@@ -1,0 +1,24 @@
+﻿@model IEnumerable<DepoStokBulucu.Models.Location>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Depo Bölgeleri</h2>
+        <a asp-action="Create" class="btn btn-success">+ Yeni Bölge Ekle</a>
+    </div>
+    <hr />
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="@item.ImagePath" class="card-img-top" style="height: 200px; object-fit: cover;" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary w-100">Ürünleri Göster / Ekle</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

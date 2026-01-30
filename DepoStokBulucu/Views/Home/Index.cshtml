@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<style>
+    /* Arama Kutusu Özelleştirme */
+    .search-container {
+        min-height: 70vh; /* Ekranın %70'ini kapla (ortalamak için) */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .custom-input {
+        background-color: #2c2c2c;
+        border: 1px solid #444;
+        color: white;
+        padding: 15px 25px;
+        font-size: 1.2rem;
+        border-radius: 50px 0 0 50px !important; /* Sol tarafı yuvarlak */
+    }
+
+        .custom-input:focus {
+            background-color: #333;
+            color: white;
+            border-color: #0d6efd;
+            box-shadow: 0 0 15px rgba(13, 110, 253, 0.3);
+        }
+
+    .custom-btn {
+        border-radius: 0 50px 50px 0 !important; /* Sağ tarafı yuvarlak */
+        padding-left: 25px;
+        padding-right: 25px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    /* jQuery UI Autocomplete Dark Mode Ayarı */
+    .ui-menu {
+        background-color: #2c2c2c !important;
+        border: 1px solid #444 !important;
+        color: white !important;
+        border-radius: 10px;
+    }
+
+    .ui-menu-item-wrapper:hover {
+        background-color: #0d6efd !important;
+        color: white !important;
+        border: none !important;
+    }
+</style>
+
+<div class="search-container">
+    <h1 class="display-3 mb-4 fw-bold text-white">Pinventory</h1>
+    <p class="text-white-50 mb-4 fs-5">Depodaki herhangi bir ürünü saniyeler içinde bulun.</p>
+
+    <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6 col-10">
+            <form asp-action="Search" method="get" id="searchForm">
+                <div class="input-group input-group-lg">
+                    <input type="text" id="searchInput" name="query" class="form-control custom-input"
+                           placeholder="Ürün adı yazın (Örn: Vitra S20)..." required autocomplete="off">
+                    <button class="btn btn-primary custom-btn" type="submit">ARA</button>
+                </div>
+            </form>
+
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-danger mt-4 bg-dark border-danger text-danger">
+                    @ViewBag.Message
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#searchInput").autocomplete({
+                source: '@Url.Action("GetProductNames", "Home")',
+                minLength: 2,
+                select: function(event, ui) {
+                    $("#searchInput").val(ui.item.value);
+                    $("#searchForm").submit();
+                }
+            });
+        });
+    </script>
+}

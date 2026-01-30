@@ -1,0 +1,147 @@
+﻿@model DepoStokBulucu.Models.Location
+
+<style>
+    /* Resim Kapsayıcısı: Noktalar buna göre konumlanacak */
+    #image-container {
+        position: relative; /* KİLİT NOKTA: Noktaların referansı burası olacak */
+        display: inline-block; /* Kapsayıcı sadece resim kadar yer kaplasın */
+        width: auto;
+        max-width: 100%;
+        margin: 0 auto; /* Ortala */
+        line-height: 0; /* Resim altı boşluğunu siler */
+    }
+
+    /* Resim CSS'i de garanti olsun */
+    #depo-img {
+        display: block; /* Resmi blok element yap */
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Kırmızı Nokta (Pin) */
+    .product-pin {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: red;
+        border: 2px solid white;
+        border-radius: 50%;
+        transform: translate(-50%, -50%); /* Tam merkeze otursun */
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        animation: pulse 2s infinite; /* Yanıp sönme efekti */
+    }
+
+    /* Yanıp Sönme Animasyonu */
+    @@keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+        }
+    }
+</style>
+
+<div class="container mt-3">
+    <h3>@Model.Name <small class="text-muted">(Ürün eklemek için resme tıkla)</small></h3>
+
+    <div id="image-container">
+        <img src="@Model.ImagePath" id="depo-img" alt="Depo Bölgesi" />
+
+        @foreach (var urun in Model.Products)
+        {
+            <div class="product-pin"
+                 style="top: @urun.CoordinateY.ToString().Replace(",", ".")%; left: @urun.CoordinateX.ToString().Replace(",", ".")%;"
+                 title="@urun.Name"
+                 onclick="alert('Bu Ürün: @urun.Name')">
+            </div>
+        }
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mt-3">Geri Dön</a>
+</div>
+
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ürün Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Seçilen Konuma Ürün Ekle:</p>
+                <input type="text" id="productName" class="form-control" placeholder="Örn: Vitra S20 Klozet" />
+                <input type="hidden" id="clickX" />
+                <input type="hidden" id="clickY" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveProduct()">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    //  Resme Tıklayınca Koordinatı Al
+       
+        // RESME TIKLAMA OLAYI (KESİN ÇÖZÜM)
+        $('#depo-img').click(function(e) {
+        // 1. Resmin sınırlarını al
+        var rect = this.getBoundingClientRect();
+
+        // 2. Tıklanan noktanın resmin soluna ve üstüne uzaklığı
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+
+        // 3. Yüzde hesapla (Virgülden sonra çok uzamasın diye toFixed(2) dedik)
+        var relativeX = ((x / rect.width) * 100).toFixed(2);
+        var relativeY = ((y / rect.height) * 100).toFixed(2);
+
+        // 4. Inputlara yaz (Nokta formatında olduğundan emin ol)
+        $('#clickX').val(relativeX.replace(',', '.'));
+        $('#clickY').val(relativeY.replace(',', '.'));
+
+        // Modalı aç
+        var myModal = new bootstrap.Modal(document.getElementById('productModal'));
+        myModal.show();
+    });
+
+    // 2. Kaydet Butonuna Basınca
+    function saveProduct() {
+        var name = $('#productName').val();
+        var x = $('#clickX').val();
+        var y = $('#clickY').val();
+        var locId = @Model.Id; // Razor'dan gelen ID
+
+        if(name == "") { alert("Ürün adı giriniz!"); return; }
+
+        // Veriyi Hazırla
+        var data = {
+            Name: name,
+            CoordinateX: parseFloat(x),
+            CoordinateY: parseFloat(y),
+            LocationId: locId
+        };
+
+        // Backend'e Gönder (AJAX)
+        $.ajax({
+            type: "POST",
+            url: "/Location/AddProduct",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            success: function () {
+                location.reload(); // Sayfayı yenile ki nokta görünsün
+            },
+            error: function () {
+                alert("Hata oluştu!");
+            }
+        });
+    }
+</script>

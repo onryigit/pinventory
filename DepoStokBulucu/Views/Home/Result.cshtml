@@ -1,0 +1,73 @@
+﻿@model DepoStokBulucu.Models.Product
+
+@{
+    ViewData["Title"] = "Arama Sonucu";
+}
+
+<style>
+    /* Aynı CSS mantığı */
+    #image-container {
+        position: relative;
+        display: inline-block;
+        width: auto;
+        max-width: 100%;
+        line-height: 0;
+    }
+
+    #depo-img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    /* Yanıp sönen nokta */
+    .target-pin {
+        position: absolute;
+        width: 30px; /* Biraz daha büyük olsun telefonda görünsün */
+        height: 30px;
+        background-color: red;
+        border: 3px solid white;
+        border-radius: 50%;
+        transform: translate(-50%, -50%); /* Tam merkeze odakla */
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+        animation: pulse 1.5s infinite;
+        z-index: 10;
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: translate(-50%, -50%) scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+        }
+
+        70% {
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 0 0 15px rgba(255, 0, 0, 0);
+        }
+
+        100% {
+            transform: translate(-50%, -50%) scale(1);
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+        }
+    }
+</style>
+
+<div class="container mt-4 text-center">
+    <div class="alert alert-success">
+        <h4>✅ @Model.Name</h4>
+        <p class="mb-0">Bulunduğu Bölge: <strong>@Model.Location.Name</strong></p>
+    </div>
+
+    <div id="image-container" class="mt-3">
+        <img src="@Model.Location.ImagePath" id="depo-img" alt="Depo Konumu" />
+
+        <div class="target-pin"
+             style="top: @Model.CoordinateY.ToString().Replace(",", ".")%; left: @Model.CoordinateX.ToString().Replace(",", ".")%;">
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary btn-lg w-100">Yeni Arama Yap</a>
+    </div>
+</div>
