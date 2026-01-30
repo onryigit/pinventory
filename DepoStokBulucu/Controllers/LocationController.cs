@@ -83,5 +83,21 @@ namespace DepoStokBulucu.Controllers
             }
             return Json(new { success = false });
         }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var location = await _context.Locations.FindAsync(id);
+            if (location != null)
+            {
+                // Önce bağlı olan ürünleri silelim (Veritabanı hatası almamak için)
+                var products = _context.Products.Where(p => p.LocationId == id);
+                _context.Products.RemoveRange(products);
+
+                // Sonra bölgeyi silelim
+                _context.Locations.Remove(location);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

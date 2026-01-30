@@ -35,6 +35,11 @@
         z-index: 10;
     }
 
+    .search-again-btn:hover {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+    }
     @@keyframes pulse {
         0% {
             transform: translate(-50%, -50%) scale(1);
@@ -55,7 +60,9 @@
 
 <div class="container mt-4 text-center">
     <div class="alert alert-success">
-        <h4>✅ @Model.Name</h4>
+        <h4>
+            <i class="bi bi-check"></i> @Model.Name
+        </h4>
         <p class="mb-0">Bulunduğu Bölge: <strong>@Model.Location.Name</strong></p>
     </div>
 
@@ -67,7 +74,8 @@
         </div>
     </div>
 
-    <div class="mt-4">
-        <a asp-action="Index" class="btn btn-secondary btn-lg w-100">Yeni Arama Yap</a>
-    </div>
+    <a asp-action="Index"
+       class="btn btn-secondary btn-lg w-100 py-3 shadow search-again-btn">
+        Yeni Arama Yap
+    </a>
 </div>
