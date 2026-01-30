@@ -16,7 +16,11 @@
             <input type="file" name="file" class="form-control" accept="image/*" required />
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg">Kaydet</button>
-        <a asp-action="Index" class="btn btn-secondary">İptal</a>
+        <div class="row mt-4">
+            <div class="col-md-6 d-flex gap-2">
+                <button type="submit" class="btn btn-primary btn-lg px-5">Kaydet</button>
+                <a asp-action="Index" class="btn btn-secondary btn-lg px-5">İptal</a>
+            </div>
+        </div>
     </form>
 </div>

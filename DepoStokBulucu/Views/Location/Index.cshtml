@@ -1,11 +1,19 @@
 ﻿@model IEnumerable<DepoStokBulucu.Models.Location>
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center">
-        <h2>Depo Bölgeleri</h2>
-        <a asp-action="Create" class="btn btn-success">+ Yeni Bölge Ekle</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white">📍 Depo Bölgeleri</h2>
+
+        <div class="d-flex gap-2">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill px-4 shadow-sm">
+                 Geri
+            </a>
+
+            <a asp-action="Create" class="btn btn-success rounded-pill px-4 shadow-sm">
+                ➕ Yeni Bölge Ekle
+            </a>
+        </div>
     </div>
-    <hr />
 
     <div class="row">
         @foreach (var item in Model)
