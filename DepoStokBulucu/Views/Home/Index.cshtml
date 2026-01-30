@@ -101,7 +101,7 @@
             <form asp-action="Search" method="get" id="searchForm">
                 <div class="input-group input-group-lg">
                     <input type="text" id="searchInput" name="query" class="form-control custom-input"
-                           placeholder="Ürün adı yazın (Örn: Vitra S20)..." required autocomplete="off">
+                           placeholder="Ürün adı yazın veya mikrofonu kullanın.." required autocomplete="off">
                     <button class="btn btn-primary custom-btn me-2" type="submit">ARA</button>
                     <button type="button" class="btn btn-info voice-btn" id="voiceBtn" title="Sesli Arama">
                         🎤
@@ -144,7 +144,7 @@
                 recognition.start();
                 isListening = true;
                 voiceBtn.classList.add('listening');
-                voiceBtn.textContent = '🎤 Dinleniyor...';
+                voiceBtn.textContent = '🎤';
             }
         });
 

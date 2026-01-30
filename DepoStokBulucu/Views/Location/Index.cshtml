@@ -1,16 +1,39 @@
 ﻿@model IEnumerable<DepoStokBulucu.Models.Location>
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-white">📍 Depo Bölgeleri</h2>
+<style>
+    /* Buton yazı ortalama - mutlak çözüm */
+    .btn-custom {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        white-space: nowrap !important;
+    }
 
-        <div class="d-flex gap-2">
-            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill px-4 shadow-sm">
-                 Geri
+    /* Mobilde butonları yığılı hale getir */
+    @@media (max-width: 576px) {
+        .button-group {
+            flex-direction: column !important;
+            width: 100%;
+        }
+
+        .button-group a {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h2 class="text-white mb-0">📍 Depo Bölgeleri</h2>
+
+        <div class="d-flex gap-2 button-group">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill px-4 shadow-sm btn-custom">
+                Geri
             </a>
 
-            <a asp-action="Create" class="btn btn-success rounded-pill px-4 shadow-sm">
-                ➕ Yeni Bölge Ekle
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4 shadow-sm btn-custom">
+                Yeni Bölge Ekle
             </a>
         </div>
     </div>
