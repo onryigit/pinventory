@@ -47,7 +47,7 @@ namespace DepoStokBulucu.Controllers
             var bestMatch = allProducts
                 .Select(p => new {
                     Product = p,
-                    Score = Fuzz.Ratio(query, p.Name.ToLower())
+                    Score = Fuzz.TokenSetRatio(query, p.Name.ToLower())
                 })
                 .OrderByDescending(x => x.Score)
                 .FirstOrDefault();
