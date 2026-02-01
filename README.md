@@ -29,7 +29,7 @@ Proje **Clean Architecture** prensiplerine sadık kalınarak, modüler ve sürd�
 | **Frontend** | HTML5, CSS3, Bootstrap 5, JavaScript |
 | **Kütüphaneler** | jQuery UI (Autocomplete), FuzzySharp, Web Speech API |
 
-## 📸 Ekran Görüntüleri
+##  Ekran Görüntüleri
 
 <img width="1350" height="1013" alt="i1" src="https://github.com/user-attachments/assets/65cb1dc7-b774-4176-a998-a5dca5de3bd1" />
 <img width="1903" height="952" alt="i2" src="https://github.com/user-attachments/assets/59b93100-363b-4289-8751-1c7a0fe7a175" />
