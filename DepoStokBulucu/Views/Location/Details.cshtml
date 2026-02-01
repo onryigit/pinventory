@@ -1,24 +1,21 @@
 ﻿@model DepoStokBulucu.Models.Location
 
 <style>
-    /* Resim Kapsayıcısı: Noktalar buna göre konumlanacak */
     #image-container {
-        position: relative; /* KİLİT NOKTA: Noktaların referansı burası olacak */
-        display: inline-block; /* Kapsayıcı sadece resim kadar yer kaplasın */
+        position: relative; 
+        display: inline-block;
         width: auto;
         max-width: 100%;
-        margin: 0 auto; /* Ortala */
-        line-height: 0; /* Resim altı boşluğunu siler */
+        margin: 0 auto;
+        line-height: 0; 
     }
 
-    /* Resim CSS'i de garanti olsun */
     #depo-img {
-        display: block; /* Resmi blok element yap */
+        display: block; 
         max-width: 100%;
         height: auto;
     }
 
-    /* Kırmızı Nokta (Pin) */
     .product-pin {
         position: absolute;
         width: 20px;
@@ -26,13 +23,12 @@
         background-color: red;
         border: 2px solid white;
         border-radius: 50%;
-        transform: translate(-50%, -50%); /* Tam merkeze otursun */
+        transform: translate(-50%, -50%); 
         cursor: pointer;
         box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        animation: pulse 2s infinite; /* Yanıp sönme efekti */
+        animation: pulse 2s infinite; 
     }
 
-    /* Yanıp Sönme Animasyonu */
     @@keyframes pulse {
         0% {
             box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
@@ -51,7 +47,7 @@
 <div class="container mt-3">
     <h3>@Model.Name <small class="text-muted">(Ürün eklemek için resme tıkla)</small></h3>
     <div class="d-flex justify-content-end">
-        <a asp-action="Index" class="btn btn-secondary mt-3 mb-1">Geri Dön</a>
+        <a asp-action="Index" class="btn btn-secondary mt-3 mb-3">Geri Dön</a>
     </div>
     <div id="image-container">
         <img src="@Model.ImagePath" id="depo-img" alt="Depo Bölgesi" />
@@ -62,6 +58,48 @@
                  style="top: @urun.CoordinateY.ToString().Replace(",", ".")%; left: @urun.CoordinateX.ToString().Replace(",", ".")%;"
                  title="@urun.Name"
                  onclick="alert('Bu Ürün: @urun.Name')">
+            </div>
+        }
+    </div>
+    <div class="mt-5">
+        <h3 class="text-white mb-3">📋 Bu Bölgedeki Ürünler</h3>
+
+        @if (Model.Products.Count == 0)
+        {
+            <div class="alert alert-secondary">
+                Henüz bu bölgede işaretlenmiş bir ürün yok. Resmin üzerine tıklayarak ekleyebilirsin.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-bordered align-middle">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th style="width: 150px;" class="text-center">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fw-bold">@product.Name</span>
+                                </td>
+                                <td class="text-center">
+                                    <form asp-action="DeleteProduct" asp-route-id="@product.Id" method="post"
+                                          onsubmit="return confirm('@product.Name ürününü silmek istediğine emin misin?');">
+
+                                        <button type="submit" class="btn btn-danger btn-sm px-3">
+                                            🗑️ Sil
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         }
     </div>
@@ -89,40 +127,32 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    //  Resme Tıklayınca Koordinatı Al
-       
-        // RESME TIKLAMA OLAYI (KESİN ÇÖZÜM)
+
         $('#depo-img').click(function(e) {
-        // 1. Resmin sınırlarını al
+      
         var rect = this.getBoundingClientRect();
 
-        // 2. Tıklanan noktanın resmin soluna ve üstüne uzaklığı
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
 
-        // 3. Yüzde hesapla (Virgülden sonra çok uzamasın diye toFixed(2) dedik)
         var relativeX = ((x / rect.width) * 100).toFixed(2);
         var relativeY = ((y / rect.height) * 100).toFixed(2);
 
-        // 4. Inputlara yaz (Nokta formatında olduğundan emin ol)
         $('#clickX').val(relativeX.replace(',', '.'));
         $('#clickY').val(relativeY.replace(',', '.'));
 
-        // Modalı aç
         var myModal = new bootstrap.Modal(document.getElementById('productModal'));
         myModal.show();
     });
 
-    // 2. Kaydet Butonuna Basınca
     function saveProduct() {
         var name = $('#productName').val();
         var x = $('#clickX').val();
         var y = $('#clickY').val();
-        var locId = @Model.Id; // Razor'dan gelen ID
+        var locId = @Model.Id;
 
         if(name == "") { alert("Ürün adı giriniz!"); return; }
 
-        // Veriyi Hazırla
         var data = {
             Name: name,
             CoordinateX: parseFloat(x),
@@ -130,14 +160,13 @@
             LocationId: locId
         };
 
-        // Backend'e Gönder (AJAX)
         $.ajax({
             type: "POST",
             url: "/Location/AddProduct",
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
             success: function () {
-                location.reload(); // Sayfayı yenile ki nokta görünsün
+                location.reload();
             },
             error: function () {
                 alert("Hata oluştu!");

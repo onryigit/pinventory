@@ -20,7 +20,6 @@ namespace DepoStokBulucu.Controllers
             return View();
         }
 
-        // ARAMA SONUCU (Fuzzy Search ile)
         public async Task<IActionResult> Search(string query)
         {
             if (string.IsNullOrWhiteSpace(query))
@@ -31,7 +30,6 @@ namespace DepoStokBulucu.Controllers
 
             query = query.ToLower().Trim();
 
-            // Önce tam eþleþme dene (hýzlý)
             var exactMatch = await _context.Products
                 .Include(p => p.Location)
                 .FirstOrDefaultAsync(p => p.Name.ToLower() == query);
@@ -39,7 +37,6 @@ namespace DepoStokBulucu.Controllers
             if (exactMatch != null)
                 return View("Result", exactMatch);
 
-            // Bulunamazsa fuzzy search yap
             var allProducts = await _context.Products
                 .Include(p => p.Location)
                 .ToListAsync();
@@ -52,7 +49,6 @@ namespace DepoStokBulucu.Controllers
                 .OrderByDescending(x => x.Score)
                 .FirstOrDefault();
 
-            // %60+ benzerlik varsa göster
             if (bestMatch != null && bestMatch.Score >= 60)
             {
                 return View("Result", bestMatch.Product);
@@ -62,7 +58,6 @@ namespace DepoStokBulucu.Controllers
             return View("Index");
         }
 
-        // OTOMATÝK TAMAMLAMA API'SÝ (Önerileri Getirir)
         public IActionResult GetProductNames(string term)
         {
             var products = _context.Products

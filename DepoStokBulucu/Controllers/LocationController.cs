@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using DepoStokBulucu.Data; // Kendi proje isminle aynı olduğundan emin ol
+using DepoStokBulucu.Data;
 using DepoStokBulucu.Models;
 
 namespace DepoStokBulucu.Controllers
@@ -16,39 +16,37 @@ namespace DepoStokBulucu.Controllers
             _environment = environment;
         }
 
-        // 1. LİSTELEME EKRANI: Mevcut yüklenenleri görelim
         public async Task<IActionResult> Index()
         {
             var locations = await _context.Locations.ToListAsync();
             return View(locations);
         }
 
-        // 2. YÜKLEME EKRANI: Sadece formu gösterir
+      
         public IActionResult Create()
         {
             return View();
         }
 
-        // 3. KAYDETME İŞLEMİ: Fotoğrafı alıp klasöre atar, veritabanına yazar
+  
         [HttpPost]
         public async Task<IActionResult> Create(Location location, IFormFile? file)
         {
             if (file != null)
             {
-                // Resim için benzersiz isim oluştur (çakışma olmasın diye)
+          
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
 
-                // Kaydedilecek yer: wwwroot/uploads
                 string uploadFolder = Path.Combine(_environment.WebRootPath, "uploads");
                 string filePath = Path.Combine(uploadFolder, uniqueFileName);
 
-                // Dosyayı fiziksel olarak kaydet
+         
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                // Veritabanına yolunu kaydet
+        
                 location.ImagePath = "/uploads/" + uniqueFileName;
 
                 _context.Add(location);
@@ -58,10 +56,10 @@ namespace DepoStokBulucu.Controllers
 
             return View(location);
         }
-        // DETAY SAYFASI: Hem resmi hem de üzerindeki ürünleri getirir
+    
         public async Task<IActionResult> Details(int id)
         {
-            // Veritabanından bölgeyi ve İÇİNDEKİ ÜRÜNLERİ (Include) çekiyoruz
+           
             var location = await _context.Locations
                 .Include(l => l.Products)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -71,7 +69,7 @@ namespace DepoStokBulucu.Controllers
             return View(location);
         }
 
-        // KAYDETME İŞLEMİ: JS'den gelen veriyi kaydeder (Sayfa yenilenmeden)
+      
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] Product product)
         {
@@ -79,7 +77,7 @@ namespace DepoStokBulucu.Controllers
             {
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true }); // Başarılı mesajı dön
+                return Json(new { success = true }); 
             }
             return Json(new { success = false });
         }
@@ -89,15 +87,37 @@ namespace DepoStokBulucu.Controllers
             var location = await _context.Locations.FindAsync(id);
             if (location != null)
             {
-                // Önce bağlı olan ürünleri silelim (Veritabanı hatası almamak için)
+               
                 var products = _context.Products.Where(p => p.LocationId == id);
                 _context.Products.RemoveRange(products);
 
-                // Sonra bölgeyi silelim
+               
                 _context.Locations.Remove(location);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
+        }
+        [HttpPost] // Silme işlemi veri değiştirdiği için Post kullanmak daha güvenlidir
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            // 1. Silinecek ürünü bul
+            var product = await _context.Products.FindAsync(id);
+
+            if (product != null)
+            {
+                // Geri döneceğimiz sayfa için LocationId'yi aklımızda tutalım
+                int locationId = product.LocationId;
+
+                // 2. Ürünü sil
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+
+                // 3. Kullanıcıyı tekrar o bölgenin detay sayfasına gönder
+                return RedirectToAction("Details", new { id = locationId });
+            }
+
+            // Ürün bulunamazsa anasayfaya dön
+            return RedirectToAction("Index");
         }
     }
 }

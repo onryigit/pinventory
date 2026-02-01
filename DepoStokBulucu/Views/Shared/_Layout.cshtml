@@ -11,24 +11,21 @@
     <link rel="stylesheet" href="~/DepoStokBulucu.styles.css" asp-append-version="true" />
 
     <style>
-        /* --- STICKY FOOTER DÜZELTMESİ --- */
-        /* height: 100% YERİNE min-height KULLANIYORUZ */
+
         body {
             background-color: #121212;
             color: #ffffff;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* En az ekran kadar uzun olsun, gerekirse uzasın */
+            min-height: 100vh;
         }
 
-        /* İçerik Alanı: Footer'ı aşağı itmesi için */
         .container {
             flex: 1;
             width: 100%;
-            padding-bottom: 2rem; /* İçerik footer'a yapışmasın */
+            padding-bottom: 2rem;
         }
 
-        /* --- DİĞER STİLLER --- */
         .navbar {
             background-color: #1e1e1e !important;
             border-bottom: 1px solid #333;
@@ -41,18 +38,17 @@
         footer {
             border-top: 1px solid #333 !important;
             color: #cccccc !important;
-            margin-top: auto; /* Otomatik olarak en alta gider */
-            background-color: #121212; /* Arka plan rengi garanti olsun */
+            margin-top: auto;
+            background-color: #121212; 
             width: 100%;
             padding: 1rem 0;
-            flex-shrink: 0; /* Footer asla büzülmesin */
+            flex-shrink: 0;
         }
 
         .text-muted {
             color: #cccccc !important;
         }
 
-        /* Admin Butonu */
         .btn-admin {
             background-color: #333;
             color: white;
@@ -65,21 +61,19 @@
                 color: white;
             }
 
-        /* Form Placeholder */
         .form-control::placeholder {
             color: #bbbbbb !important;
             opacity: 1;
         }
 
-        /* Input Kutusu */
         .form-control {
             color: white !important;
             background-color: #2c2c2c;
             border-color: #444;
         }
-        /* Modal (Açılır Pencere) Dark Mode Düzeltmeleri */
+  
         .modal-content {
-            background-color: #1e1e1e !important; /* Modal arka planını koyulaştır */
+            background-color: #1e1e1e !important;
             color: white !important;
             border: 1px solid #333;
         }
@@ -92,19 +86,15 @@
             border-top: 1px solid #333;
         }
 
-        /* Modal içindeki inputun görünürlüğü */
         #productName {
             background-color: #2c2c2c !important;
             color: white !important;
             border: 1px solid #444 !important;
         }
 
-            /* Modal içindeki placeholder (ipucu yazısı) */
             #productName::placeholder {
                 color: #888 !important;
             }
-
-        /* Kapatma (X) butonu rengi */
         .btn-close {
             filter: invert(1) grayscale(100%) brightness(200%);
         }
