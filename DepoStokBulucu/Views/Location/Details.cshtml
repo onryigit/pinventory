@@ -50,7 +50,9 @@
 
 <div class="container mt-3">
     <h3>@Model.Name <small class="text-muted">(Ürün eklemek için resme tıkla)</small></h3>
-
+    <div class="d-flex justify-content-end">
+        <a asp-action="Index" class="btn btn-secondary mt-3 mb-1">Geri Dön</a>
+    </div>
     <div id="image-container">
         <img src="@Model.ImagePath" id="depo-img" alt="Depo Bölgesi" />
 
@@ -63,8 +65,6 @@
             </div>
         }
     </div>
-
-    <a asp-action="Index" class="btn btn-secondary mt-3">Geri Dön</a>
 </div>
 
 <div class="modal fade" id="productModal" tabindex="-1">
