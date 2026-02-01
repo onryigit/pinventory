@@ -97,27 +97,49 @@ namespace DepoStokBulucu.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-        [HttpPost] // Silme işlemi veri değiştirdiği için Post kullanmak daha güvenlidir
+        [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            // 1. Silinecek ürünü bul
+            
             var product = await _context.Products.FindAsync(id);
 
             if (product != null)
             {
-                // Geri döneceğimiz sayfa için LocationId'yi aklımızda tutalım
+
                 int locationId = product.LocationId;
 
-                // 2. Ürünü sil
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
 
-                // 3. Kullanıcıyı tekrar o bölgenin detay sayfasına gönder
+          
                 return RedirectToAction("Details", new { id = locationId });
             }
 
-            // Ürün bulunamazsa anasayfaya dön
             return RedirectToAction("Index");
+        }
+  
+        public async Task<IActionResult> EditProduct(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProduct(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+         
+                _context.Products.Update(product);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", new { id = product.LocationId });
+            }
+            return View(product);
         }
     }
 }
