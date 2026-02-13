@@ -39,5 +39,7 @@ Proje **Clean Architecture** prensiplerine sadık kalınarak, modüler ve sürd�
 <img width="1350" height="1942" alt="i5" src="https://github.com/user-attachments/assets/79ecb2b5-44fb-4653-b093-d81dbab91d8a" />
 <img width="1350" height="1013" alt="i6" src="https://github.com/user-attachments/assets/f6e360de-b328-41dd-b9b8-9965c18c8bbf" />
 <img width="1350" height="1013" alt="i7" src="https://github.com/user-attachments/assets/f6d5e1e1-7b8b-4717-9bee-2f621e697d40" />
-*(Not: Ekran görüntüleri temsilidir, projeyi indirip inceleyebilirsiniz.)*
+## Update
+Minor documentation update.
+
 
